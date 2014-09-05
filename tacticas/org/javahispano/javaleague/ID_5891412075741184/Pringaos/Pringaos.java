@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.javahispano.javaleague.ID_5096363633147904.Pringaos;
+package org.javahispano.javaleague.ID_5891412075741184.Pringaos;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -120,6 +120,7 @@ public class Pringaos implements Tactic {
 
 	@Override
 	public List<Command> execute(GameSituations sp) {
+	
 		// Limpia la lista de comandos
 		comandos.clear();
 
@@ -396,6 +397,7 @@ class Trayectoria {
 			positions[i][2] = t.getY((double) (i + 1) / 60d)
 					* Constants.AMPLIFICA_VEL_TRAYECTORIA * 2;
 		}
+
 	}
 
 	public double[] getPos(int i) {
@@ -581,6 +583,8 @@ class Pringaos2012Detalle implements TacticDetail {
 		}
 
 		public Color getSkinColor() {
+			//java.awt.Color petaColor = new java.awt.Color(0, 0, 0);
+			
 			return piel;
 		}
 
