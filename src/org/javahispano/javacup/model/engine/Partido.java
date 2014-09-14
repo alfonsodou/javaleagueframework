@@ -16,10 +16,10 @@ import org.javahispano.javacup.model.command.CommandMoveTo;
 import org.javahispano.javacup.model.trajectory.AbstractTrajectory;
 import org.javahispano.javacup.model.trajectory.AirTrajectory;
 import org.javahispano.javacup.model.trajectory.FloorTrajectory;
-import org.javahispano.javacup.model.util.BenchMark;
 import org.javahispano.javacup.model.util.Constants;
 import org.javahispano.javacup.model.util.Position;
 import org.javahispano.javacup.model.util.TacticValidate;
+import org.javahispano.javaleague.javacup.shared.BenchMark;
 
 
 /**Esta clase se encarga de la ejecucion de partidos*/
@@ -103,6 +103,8 @@ public final class Partido implements PartidoInterface {
     
     private long timeLocal; // Tiempo empleado en ejecutar la táctica local en una iteración
     private long timeVisita; // Tiempo empleado en ejecutar la táctica visitante en una iteración
+    
+    private long maxTimeIter = Long.MAX_VALUE; // Tiempo máximo ejecución táctica por iteración
 
     @Override
     public boolean fueGrabado() {
@@ -175,6 +177,34 @@ public final class Partido implements PartidoInterface {
         iterar();
     }
 
+    /**Instancia un nuevo partido, indicando la tactica local y la tactica visita*/
+    public Partido(Tactic tacticaLocal, Tactic tacticaVisita, boolean save, long maxTimeIter) throws Exception {
+        this();
+        this.tacticaLocal = new TacticaImpl(tacticaLocal);//deja inmutables las aptitudes, colores, nombres, etc.
+        this.tacticaVisita = new TacticaImpl(tacticaVisita);//deja inmutables las aptitudes, colores, nombres, etc.
+        this.save = save;
+        this.maxTimeIter = maxTimeIter;
+        TacticValidate.validateDetail("Tactica local:", tacticaLocal.getDetail());
+        TacticValidate.validateDetail("Tactica visita:", tacticaVisita.getDetail());
+
+        Position[][] i0 = new Position[2][11];
+        Position[][] i1 = new Position[2][11];
+        i0 = new Position[][]{tacticaLocal.getNoStartPositions(spLocal), tacticaVisita.getNoStartPositions(spVisita)};
+        i1 = new Position[][]{tacticaLocal.getStartPositions(spLocal), tacticaVisita.getStartPositions(spVisita)};//solo para validar
+        Position p0[][] = TacticValidate.validatePositions("Valida sacaVisita", i1[1], i0[0]);
+        Position p1[][] = TacticValidate.validatePositions("Valida sacaLocal", i1[0], i0[1]);
+
+        posSaqueCentro = new Position[][]{p0[1], p1[1]};
+        //guarda las caracteristicas de los jugadores en los objetos GameSituations*/
+        spLocal.set(new PlayerDetail[][]{tacticaLocal.getDetail().getPlayers(), tacticaVisita.getDetail().getPlayers()});
+        spVisita.set(new PlayerDetail[][]{tacticaVisita.getDetail().getPlayers(), tacticaLocal.getDetail().getPlayers()});
+        if (save) {
+            guardado = new PartidoGuardado(new TacticaDetalleImpl(tacticaLocal.getDetail()), new TacticaDetalleImpl(tacticaVisita.getDetail()));
+        }
+        iterar();
+    }
+    
+    
     /**Retorna la iteriacion en curso*/
     @Override
     public int getIteracion() {
@@ -652,6 +682,10 @@ public final class Partido implements PartidoInterface {
         	spLocal.setStartTime(startTime);
             comandosLocales = tacticaLocal.execute(spLocal);//envia la situacion del partido y obtiene los comandos de la tactica local
         	timeLocal = System.nanoTime() - startTime;
+        	
+        	if (timeLocal > maxTimeIter) // Se eliminan los comandos locales de esta iteración por superar el tiempo máximo permitido 
+        		comandosLocales.clear();
+
         } catch (Exception e) {
             logger.severe("Error al ejecutar tactica local: " + e.getMessage());
         }
@@ -661,9 +695,15 @@ public final class Partido implements PartidoInterface {
         	spVisita.setStartTime(startTime);
             comandosVisita = tacticaVisita.execute(spVisita);//envia la situacion del partido y obtiene los comandos de la tactica visita
         	timeVisita = System.nanoTime() - startTime;
+        	
+        	if (timeVisita > maxTimeIter) // Se eliminan los comandos visitantes de esta iteración por superar el tiempo máximo permitido
+        		comandosVisita.clear();
+        	
         } catch (Exception e) {
             logger.severe("Error al ejecutar tactica visita: " + e.getMessage());
         }
+        
+        // logger.log(Level.INFO, "*** Tiempo local: " + timeLocal + " ***\t " + "Tiempo Visita: " + timeVisita);
         
         executeCommands(comandosLocales, comandosVisita);//ejecuta los comandos
         actualizarEnergia(comandosLocales, comandosVisita); //ajusta la energia de los jugadores tras ejecutar los comandos

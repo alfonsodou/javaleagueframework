@@ -13,12 +13,12 @@
   <numeros>true</numeros>
   <sonidos>true</sonidos>
   <jugadores3d>false</jugadores3d>
-  <buffer>true</buffer>
+  <buffer>false</buffer>
   <estadioIdx>0</estadioIdx>
   <escala>15.0</escala>
   <ubicacion>
-    <x>200</x>
-    <y>200</y>
+    <x>562</x>
+    <y>119</y>
     <width>640</width>
     <height>480</height>
   </ubicacion>
@@ -31,8 +31,8 @@
   <dobleBuffer>true</dobleBuffer>
   <fps>20</fps>
   <tipoTexto>0</tipoTexto>
-  <local>org.javahispano.javaleague.ID_6399715750969344.Pringaos.Pringaos</local>
-  <visita>org.javahispano.javaleague.ID_6399715750969344.Pringaos.Pringaos</visita>
+  <local>org.javahispano.javaleague.ID_5236481102708736.romedal.TacticaRomedalusTeam</local>
+  <visita>org.javahispano.javaleague.ID_5236481102708736.Pringaos.Pringaos</visita>
   <guardados>
     <url>file:/home/adou/Descargas/5866112637992960.jvc</url>
   </guardados>

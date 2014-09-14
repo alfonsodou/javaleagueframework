@@ -20,11 +20,11 @@ import org.javahispano.javaleague.javacup.shared.MatchShared;
 public class AgentPartido implements Agent {
 
 	@Override
-	public MatchShared execute(Object l, Object v) throws Exception {
+	public MatchShared execute(Object l, Object v, long maxTimeIter) throws Exception {
 		Partido partido;
 		MatchShared matchShared = new MatchShared();
 
-		partido = new Partido((Tactic) l, (Tactic) v, true);
+		partido = new Partido((Tactic) l, (Tactic) v, true, maxTimeIter);
 		int iter = 0;
 		for (int i = 0; partido.getEstado() != 7; i++) {
 			partido.iterar();

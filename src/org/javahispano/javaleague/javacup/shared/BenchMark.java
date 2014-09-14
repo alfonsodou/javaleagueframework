@@ -1,14 +1,15 @@
 /**
  * 
  */
-package org.javahispano.javacup.model.util;
+package org.javahispano.javaleague.javacup.shared;
 
 /**
  * @author adou
  *
  */
 public class BenchMark {
-	private double benchMark;
+	private long benchMark;
+	private long maxTimeIter;
 	
 	public BenchMark() {
 	    long t1 = System.nanoTime();
@@ -20,7 +21,9 @@ public class BenchMark {
 
 	    long t2 = System.nanoTime();
 	    
-	    benchMark = ((t2 - t1) * 1e-9);
+	    benchMark = (t2 - t1);
+	    
+	    maxTimeIter = Long.MAX_VALUE;
 	}
 	
 	private static int sum() {
@@ -34,8 +37,17 @@ public class BenchMark {
 	/**
 	 * @return the benchMark
 	 */
-	public double getBenchMark() {
+	public long getBenchMark() {
 		return benchMark;
 	}
+
+	/**
+	 * @return the maxTimeIter
+	 */
+	public long getMaxTimeIter() {
+		return maxTimeIter;
+	}
+	
+	
 
 }

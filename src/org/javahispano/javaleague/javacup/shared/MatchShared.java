@@ -17,7 +17,7 @@ public class MatchShared {
 	private int state;
 	private long[] timeLocal;
 	private long[] timeVisita;
-	
+
 	public MatchShared() {
 		this.match = null;
 		this.matchBin = null;
@@ -140,6 +140,6 @@ public class MatchShared {
 	public void setMatchBin(byte[] matchBin) {
 		this.matchBin = matchBin;
 	}
-	
+
 	
 } 
