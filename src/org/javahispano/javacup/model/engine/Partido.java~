@@ -354,8 +354,8 @@ public final class Partido implements PartidoInterface {
             		/* Modificado para evitar goles imparables
             		 * 
             		 */
-            		//if (alturaBalon - balonDz0 > Constants.ALTO_ARCO) {
-            		if (alturaBalon - balonDz > Constants.ALTO_ARCO) {
+            		if (alturaBalon - balonDz0 > Constants.ALTO_ARCO) {
+            		//if (alturaBalon - balonDz > Constants.ALTO_ARCO) {
                     
             			if (balon.getY() < 0) 
                             esGol = -3;//da una jugada mas para tapar el ballPosition
