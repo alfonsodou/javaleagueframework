@@ -20,7 +20,8 @@ import org.javahispano.javaleague.javacup.shared.MatchShared;
 public class AgentPartido implements Agent {
 
 	@Override
-	public MatchShared execute(Object l, Object v, long maxTimeIter) throws Exception {
+	public MatchShared execute(Object l, Object v, long maxTimeIter)
+			throws Exception {
 		Partido partido;
 		MatchShared matchShared = new MatchShared();
 
@@ -55,24 +56,18 @@ public class AgentPartido implements Agent {
 	}
 
 	@Override
-	public String testTactic(Object l, Object v) {
+	public void testTactic(Object l, Object v) throws Exception {
 		Partido partido;
 
-		try {
-			partido = new Partido((Tactic) l, (Tactic) v, true);
-			int iter = 0;
-			for (int i = 0; partido.getEstado() != 7; i++) {
-				partido.iterar();
-				iter = partido.getIteracion();
-				if (i > 250) {
-					break;
-				}
+		partido = new Partido((Tactic) l, (Tactic) v, true);
+		int iter = 0;
+		for (int i = 0; partido.getEstado() != 7; i++) {
+			partido.iterar();
+			iter = partido.getIteracion();
+			if (i > 250) {
+				break;
 			}
-		} catch (Exception e) {
-			return stackTraceToString(e);
 		}
-
-		return null;
 	}
 
 	public String stackTraceToString(Throwable e) {
