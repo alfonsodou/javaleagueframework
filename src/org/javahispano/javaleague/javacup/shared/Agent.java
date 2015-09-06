@@ -7,5 +7,5 @@ public interface Agent {
 
 	public boolean isTactic(Class<?> t) throws Exception;
 
-	public void testTactic(Object l, Object v) throws Exception;
+	public void testTactic(Object l, Object v, int num_iteraciones) throws Exception;
 }

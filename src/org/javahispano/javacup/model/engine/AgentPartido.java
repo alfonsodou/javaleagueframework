@@ -56,7 +56,7 @@ public class AgentPartido implements Agent {
 	}
 
 	@Override
-	public void testTactic(Object l, Object v) throws Exception {
+	public void testTactic(Object l, Object v, int num_iteraciones) throws Exception {
 		Partido partido;
 
 		partido = new Partido((Tactic) l, (Tactic) v, true);
@@ -64,7 +64,7 @@ public class AgentPartido implements Agent {
 		for (int i = 0; partido.getEstado() != 7; i++) {
 			partido.iterar();
 			iter = partido.getIteracion();
-			if (i > 250) {
+			if (i > num_iteraciones) {
 				break;
 			}
 		}
