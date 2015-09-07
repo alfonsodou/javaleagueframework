@@ -546,7 +546,7 @@ public class Torneo {
     	};
     
     //ejecuta la segunda fase (eliminatorias)... guarda los partidos en path
-    static void eliminatorias(String path) {
+    static void eliminatorias(String path) throws Exception {
         File f = new File(path);
         if (!f.exists()) {
             f.mkdirs();
@@ -699,7 +699,7 @@ public class Torneo {
     }
 
     //ejecuta la fase 1, guarda los resultados en path
-    static void primeraFase(String path) {
+    static void primeraFase(String path) throws Exception {
         HashMap<Class, Integer> puntos = new HashMap<Class, Integer>();
         HashMap<Class, Integer> goles = new HashMap<Class, Integer>();
         HashMap<Class, Integer> golesafavor = new HashMap<Class, Integer>();

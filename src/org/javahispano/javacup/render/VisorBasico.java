@@ -13,12 +13,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Random;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
 import org.javahispano.javacup.gui.principal.PrincipalFrame;
 import org.javahispano.javacup.model.util.Constants;
 import org.javahispano.javacup.model.engine.PartidoInterface;
@@ -95,7 +97,7 @@ public class VisorBasico extends javax.swing.JFrame {
         }
     }
 
-    private void loadImages() throws IOException {
+    private void loadImages() throws Exception {
         boolean uniformeAlternativo = TacticValidate.useAlternativeColors(p.getDetalleLocal(), p.getDetalleVisita());
         int polera = new Color(255, 255, 0).getRGB();
         int pantalon = new Color(255, 0, 255).getRGB();
@@ -217,7 +219,7 @@ public class VisorBasico extends javax.swing.JFrame {
     private Font f = new Font("arial", 0, 9);
     private DecimalFormat df = new DecimalFormat("##.##");
 
-    public void pinta(Graphics g) {
+    public void pinta(Graphics g) throws Exception {
         Graphics2D gr;
 
         if (dobleBuffer) {
@@ -385,7 +387,7 @@ public class VisorBasico extends javax.swing.JFrame {
      * @param principal
      * @throws IOException
      */
-    public VisorBasico(PartidoInterface partido, PrincipalFrame principal) throws IOException {
+    public VisorBasico(PartidoInterface partido, PrincipalFrame principal) throws Exception {
 
         this.principal = principal;
         p = partido;
@@ -507,13 +509,18 @@ public class VisorBasico extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws Exception {
 
         jPanel1 = new JPanel(){
 
             @Override
-            public void paint(Graphics g){
-                pinta(g);
+            public void paint(Graphics g) {
+                try {
+					pinta(g);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
 
         };

@@ -13,7 +13,7 @@ final class TacticaImpl implements Tactic {
 	final Tactic tac;
 	final TacticaDetalleImpl detalle;
 
-	public TacticaImpl(Tactic tac) {
+	public TacticaImpl(Tactic tac) throws Exception {
 		this.tac = tac;
 		detalle = new TacticaDetalleImpl(tac.getDetail());
 	}
@@ -24,17 +24,17 @@ final class TacticaImpl implements Tactic {
 	}
 
 	@Override
-	public List<Command> execute(GameSituations sp) {
+	public List<Command> execute(GameSituations sp) throws Exception {
 		return tac.execute(sp);
 	}
 
 	@Override
-	public Position[] getStartPositions(GameSituations sp) {
+	public Position[] getStartPositions(GameSituations sp) throws Exception {
 		return tac.getStartPositions(sp);
 	}
 
 	@Override
-	public Position[] getNoStartPositions(GameSituations sp) {
+	public Position[] getNoStartPositions(GameSituations sp) throws Exception {
 		return tac.getNoStartPositions(sp);
 	}
 }

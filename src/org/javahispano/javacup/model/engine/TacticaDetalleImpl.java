@@ -29,7 +29,7 @@ import org.javahispano.javacup.render.EstiloUniforme;
     private final JugadorImpl[] jugadores = new JugadorImpl[11];
 
 	/**Copia el detalle y deja inmutables sus valores*/
-    TacticaDetalleImpl(TacticDetail impl) {
+    TacticaDetalleImpl(TacticDetail impl) throws Exception {
         this.nombre = impl.getTacticName();
         this.pais = impl.getCountry();
         this.entrenador = impl.getCoach();

@@ -278,7 +278,7 @@ public final class Partido implements PartidoInterface {
     }
     //actualiza los jugadores que pueden rematar;
 
-    private void puedenRematar() {
+    private void puedenRematar() throws Exception {
         double vel = Math.sqrt(balonDx * balonDx + balonDy * balonDy);
         double probabilidad = (7d - vel) / 7d;
         double altura = 0;
@@ -413,7 +413,7 @@ public final class Partido implements PartidoInterface {
 
     /**Realiza una iteration donde los jugadores se mueven desde su posicion hasta una posicion final
      * mientras algun jugador no llegue a su destino retorna false*/
-    private boolean toPosicion(Position[] posLoc, Position[] posVis) {
+    private boolean toPosicion(Position[] posLoc, Position[] posVis) throws Exception {
         boolean ok = true;
         for (int i = 0; i < 11; i++) {
             Position p = irA(tacticaLocal, i, posLocal[i], posLoc[i], false);
@@ -478,7 +478,7 @@ public final class Partido implements PartidoInterface {
     }
 
     /**Traslada los jugadores desde su posicion actual hasta la posicion para tomar la foto*/
-    private void toFoto() {
+    private void toFoto() throws Exception {
         if (toPosicion(paLaFoto, paLaFoto2)) {
             estado = 2;
             iteracion = 0;
@@ -486,7 +486,7 @@ public final class Partido implements PartidoInterface {
     }
 
     /**Traslada los jugadores hacia la posicion de inicio del juego*/
-    private void toAlineacion(boolean iniciaElLocal) {
+    private void toAlineacion(boolean iniciaElLocal) throws Exception {
         if (iniciaElLocal) {
             if (toPosicion(posSaqueCentro[0], posSaqueCentro[1])) {
                 estado = 4;
@@ -512,7 +512,7 @@ public final class Partido implements PartidoInterface {
     }
 
     /**Al llamar este metodo no se ejecutara la entrada al estadio*/
-    public void inicioRapido() {
+    public void inicioRapido() throws Exception {
         Position tl[] = tacticaLocal.getNoStartPositions(spLocal);
         Position tv[] = tacticaVisita.getNoStartPositions(spVisita);
         for (int i = 0; i < 11; i++) {
@@ -524,7 +524,7 @@ public final class Partido implements PartidoInterface {
     }
 
   /** Itera en un saque hasta que los jugadores se han retirado lo suficiente del bal�n para respetar con la distancia m�nima para el saque**/
-   private void iteraDistanciaMinima() {
+   private void iteraDistanciaMinima() throws Exception {
    
 	if (saque == SAQUE_LIBRE_INDIRECTO) 	{
 		isOffSide = false; //Cancelamos el marcador de fuera de juego para que el visor pueda mostrar el texto de fuera de juego
@@ -667,7 +667,7 @@ public final class Partido implements PartidoInterface {
 
     /**Ejecuta una iteration durande la ejecucion de un partido, enviando el estado del partido a
     cada tactica participante*/
-    private void iterarJuego() {
+    private void iterarJuego() throws Exception {
     	long startTime;
     	
         isOffSide = false; // se setea el fuera de juego
@@ -950,7 +950,7 @@ public final class Partido implements PartidoInterface {
     private double _angTrayectoria = 0, _x0Trayectoria = 0, _y0Trayectoria = 0, _t0Trayectoria;
 
     /**Ejecuta la lista de comandos enviados por las tacticas*/
-    private void executeCommands(List<Command> comandosLocal, List<Command> comandosVisita) {
+    private void executeCommands(List<Command> comandosLocal, List<Command> comandosVisita) throws Exception {
 
         Command.CommandType tipo;//almacena un tipo de comando: irA o golpearBalon
         int indJugador;//almacena un indice de jugador para ser usado en un comando
@@ -1304,7 +1304,7 @@ public final class Partido implements PartidoInterface {
     }
 
     /**Mueve un jugador*/
-    private Position irA(Tactic t, int indJugador, Position posicion, Position irA, boolean sprint) {
+    private Position irA(Tactic t, int indJugador, Position posicion, Position irA, boolean sprint) throws Exception {
         
     	double dist = irA.distance(posicion);
        
@@ -1367,12 +1367,12 @@ public final class Partido implements PartidoInterface {
     }
 
     @Override
-    public TacticDetail getDetalleLocal() {
+    public TacticDetail getDetalleLocal() throws Exception {
         return tacticaLocal.getDetail();
     }
 
     @Override
-    public TacticDetail getDetalleVisita() {
+    public TacticDetail getDetalleVisita() throws Exception {
         return tacticaVisita.getDetail();
     }
     public boolean buffered = false;
@@ -1499,7 +1499,7 @@ public final class Partido implements PartidoInterface {
 	/* 2013-09-21 :: Modificado según comentarios foro:
      * http://www.javahispano.org/foro-de-la-javacup/post/2200515
      */    
-    private void corregirDistanciaSaque() {
+    private void corregirDistanciaSaque() throws Exception {
     	Position [] posJugadoresSaca = (sacaLocal) ? posLocal : posVisita;
     	Tactic tacticaSaca = (sacaLocal) ? tacticaLocal : tacticaVisita;
     	GameSituations spSaca = (sacaLocal) ? spLocal : spVisita;

@@ -39,10 +39,10 @@ public interface PartidoInterface {
     public boolean cambioDeSaque();
 
     /**Retorna la TacticDetail del local*/
-    public TacticDetail getDetalleLocal();
+    public TacticDetail getDetalleLocal() throws Exception;
 
     /**Retorna la TacticDetail de la visita*/
-    public TacticDetail getDetalleVisita();
+    public TacticDetail getDetalleVisita() throws Exception;
 
     /**Retorna el partido guardado*/
     public PartidoGuardado getPartidoGuardado();
