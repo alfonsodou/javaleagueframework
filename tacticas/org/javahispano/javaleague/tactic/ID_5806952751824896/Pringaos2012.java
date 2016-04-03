@@ -132,9 +132,9 @@ public class Pringaos2012 implements Tactic {
 		Position nueva = new Position();
 		double angulo;
 
-		double a = 14 / 0;
+//		double a = 14 / 0;
 		
-		for (int i = -1; i < jugadores.length; i++) {
+		for (int i = 0; i < jugadores.length; i++) {
 			if (sp.iteration() == 0) {
 				comandos.add(new CommandMoveTo(i, alineacion4[i]));
 			} else {
