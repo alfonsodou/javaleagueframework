@@ -10,8 +10,6 @@ import org.javahispano.javacup.model.command.Command;
 import org.javahispano.javacup.model.command.CommandHitBall;
 import org.javahispano.javacup.model.command.CommandMoveTo;
 import org.javahispano.javacup.model.engine.GameSituations;
-import org.javahispano.javacup.model.trajectory.AbstractTrajectory;
-import org.javahispano.javacup.model.trajectory.AirTrajectory;
 import org.javahispano.javacup.model.util.Constants;
 import org.javahispano.javacup.model.util.Position;
 
@@ -107,13 +105,21 @@ public class Pringaos implements Tactic {
 		return detalle;
 	}
 
+	MiPosicion balonAnterior = new MiPosicion(new Position());
+	MiPosicion balonActual = new MiPosicion(new Position());
+
 	@Override
 	public List<Command> execute(GameSituations sp) {
 		// Limpia la lista de comandos
 		comandos.clear();
-
 		// Obtiene las posiciones de tus jugadores
 		Position[] jugadores = sp.myPlayers();
+		Position[] rivales = sp.rivalPlayers();
+
+		balonAnterior = balonActual;
+		balonActual.setX(sp.ballPosition().getX());
+		balonActual.setY(sp.ballPosition().getY());
+		balonActual.setZ(sp.ballAltitude());
 
 		// Instancia un generador aleatorio
 		Random r = new Random();
@@ -254,7 +260,7 @@ public class Pringaos implements Tactic {
 										.getVelocidad(sp.getMyPlayerSpeed(i));
 						dist = pJug.distance(new Position(posBalon[0],
 								posBalon[1]));
-						if (dist0 >= dist) {
+						if ((dist0 >= dist) && (!sp.getOffSidePlayers()[i])) {
 							found = true;
 							idxFound = it;
 							ret[0] = it;
@@ -362,120 +368,6 @@ public class Pringaos implements Tactic {
 	@Override
 	public Position[] getNoStartPositions(GameSituations sp) {
 		return alineacion6;
-	}
-
-}
-
-class Trayectoria {
-	public double[][] positions;
-
-	public Trayectoria(Position pos, double vel, double ang, double angV) {
-		double radio;
-
-		positions = new double[100][3];
-		AbstractTrajectory t = new AirTrajectory(vel * Math.cos(angV), vel
-				* Math.sin(angV), 0, 0);
-		for (int i = 0; i < 100; i++) {
-			radio = t.getX((double) (i + 1) / 60d)
-					* Constants.AMPLIFICA_VEL_TRAYECTORIA;
-			positions[i][0] = pos.getX() + radio * Math.cos(ang);
-			positions[i][1] = pos.getY() + radio * Math.sin(ang);
-			positions[i][2] = t.getY((double) (i + 1) / 60d)
-					* Constants.AMPLIFICA_VEL_TRAYECTORIA * 2;
-		}
-	}
-
-	public double[] getPos(int i) {
-		return positions[i];
-	}
-}
-
-class Pases {
-	Position pos;
-	double score;
-	double angle;
-	double power;
-	int iteraciones;
-	int id_player_source;
-	int id_player_target;
-
-	public Pases(Position p, double s) {
-		pos = p;
-		score = s;
-		angle = 0;
-		power = 0;
-		iteraciones = 0;
-	}
-
-	public Pases(Position p, double s, double a, double po, int it, int source,
-			int target) {
-		pos = p;
-		score = s;
-		angle = a;
-		power = po;
-		iteraciones = it;
-		id_player_source = source;
-		id_player_target = target;
-	}
-
-	public Position getPos() {
-		return pos;
-	}
-
-	public void setPos(Position pos) {
-		this.pos = pos;
-	}
-
-	public double getScore() {
-		return score;
-	}
-
-	public void setScore(double score) {
-		this.score = score;
-	}
-
-	public void addScore(double score) {
-		this.score += score;
-	}
-
-	public double getAngle() {
-		return angle;
-	}
-
-	public void setAngle(double angle) {
-		this.angle = angle;
-	}
-
-	public double getPower() {
-		return power;
-	}
-
-	public void setPower(double power) {
-		this.power = power;
-	}
-
-	public int getIteraciones() {
-		return iteraciones;
-	}
-
-	public void setIteraciones(int iteraciones) {
-		this.iteraciones = iteraciones;
-	}
-
-	public int getId_player_source() {
-		return id_player_source;
-	}
-
-	public void setId_player_source(int id_player_source) {
-		this.id_player_source = id_player_source;
-	}
-
-	public int getId_player_target() {
-		return id_player_target;
-	}
-
-	public void setId_player_target(int id_player_target) {
-		this.id_player_target = id_player_target;
 	}
 
 }
