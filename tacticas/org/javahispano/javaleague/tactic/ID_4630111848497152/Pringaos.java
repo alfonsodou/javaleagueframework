@@ -112,6 +112,12 @@ public class Pringaos implements Tactic {
 	public List<Command> execute(GameSituations sp) {
 		// Limpia la lista de comandos
 		comandos.clear();
+		
+		/*double p = 0;
+		for(int i = 0; i < 10000000; i++) {
+			p += i * i;
+		}*/
+		
 		// Obtiene las posiciones de tus jugadores
 		Position[] jugadores = sp.myPlayers();
 		for (int i = 0; i < jugadores.length; i++) {
