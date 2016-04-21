@@ -114,50 +114,10 @@ public class Pringaos implements Tactic {
 		comandos.clear();
 		// Obtiene las posiciones de tus jugadores
 		Position[] jugadores = sp.myPlayers();
-		Position[] rivales = sp.rivalPlayers();
-
-		balonAnterior = balonActual;
-		balonActual.setX(sp.ballPosition().getX());
-		balonActual.setY(sp.ballPosition().getY());
-		balonActual.setZ(sp.ballAltitude());
-
-		// Instancia un generador aleatorio
-		Random r = new Random();
-
-		Position nueva = new Position();
-		double angulo;
-
 		for (int i = 0; i < jugadores.length; i++) {
-			if (sp.iteration() == 0) {
-				comandos.add(new CommandMoveTo(i, alineacion4[i]));
-			} else {
-				int nearest = jugadores[i].nearestIndex(sp.rivalPlayers());
-				int count;
-				double distance = jugadores[i]
-						.distance(sp.rivalPlayers()[nearest]);
-				if (distance < Constants.JUGADORES_SEPARACION) {
-					nueva = jugadores[i];
-					count = 0;
-					while ((distance < Constants.JUGADORES_SEPARACION)
-							&& (count < 20)) {
-						angulo = r.nextInt(360) * Math.PI / 180;
-						nueva = jugadores[i].moveAngle(angulo,
-								Constants.getVelocidad(sp.getMyPlayerSpeed(i)));
-						if (nueva.isInsideGameField(0)) {
-							distance = nueva
-									.distance(sp.rivalPlayers()[nearest]);
-						} else {
-							distance = 0;
-						}
-						count++;
-					}
-					comandos.add(new CommandMoveTo(i, nueva));
-				} else {
-					comandos.add(new CommandMoveTo(i, alineacion4[i]));
-				}
-			}
+			// Ordena a cada jugador que se ubique segun la alineacion1
+			comandos.add(new CommandMoveTo(i, alineacion1[i]));
 		}
-
 		// Si no saca el rival
 		if (!sp.isRivalStarts()) {
 			// Obtiene los datos de recuperacion del balon
@@ -177,7 +137,8 @@ public class Pringaos implements Tactic {
 				}
 			}
 		}
-
+		// Instancia un generador aleatorio
+		Random r = new Random();
 		// Recorre la lista de mis jugadores que pueden rematar
 		for (int i : sp.canKick()) {
 			// Si el jugador es de indice 8 o 10
@@ -197,167 +158,34 @@ public class Pringaos implements Tactic {
 							Constants.posteIzqArcoSup, 1, 12 + r.nextInt(6)));
 				}
 			} else {
-				double max_score = 0;
-				int max_index = -1;
-
-				LinkedList<Pases> pases = isPassSafeFromOpponent(sp, i);
-				max_score = -1;
-				max_index = -1;
-				for (int c = 0; c < pases.size(); c++) {
-					if (pases.get(c).getPos().getY() > sp.myPlayers()[i].getY()) {
-						pases.get(c).addScore(1);
-					}
-
-					if (pases.get(c).getPos().getY() > 0) {
-						pases.get(c).addScore(1);
-					}
-
-					pases.get(c).addScore(
-							(double) (1.0 / pases.get(c).getIteraciones()));
-
-					if (pases.get(c).getScore() > max_score) {
-						max_score = pases.get(c).getScore();
-						max_index = c;
+				// inicia contador en cero
+				int count = 0;
+				int jugadorDestino;
+				// Repetir mientras el jugador destino sea igual al jugador que
+				// remata
+				while (((jugadorDestino = r.nextInt(11)) == i
+				// o mientras la coordenada y del jugador que remata
+				// es mayor que la coordenada y del que recibe
+						|| jugadores[i].getY() > jugadores[jugadorDestino]
+								.getY())
+						// Y mientras el contador es menor a 20
+						&& count < 20) {
+					// incrementa el contador
+					count++;
+				}
+				// Si el receptor del balon es el que remata
+				if (i == jugadorDestino) {
+					while ((jugadorDestino = r.nextInt(jugadores.length)) == i) {
 					}
 				}
-
-				comandos.add(new CommandHitBall(i, jugadores[pases.get(
-						max_index).getId_player_target()], pases.get(max_index)
-						.getPower(), pases.get(max_index).getAngle()));
+				// Ordena que el jugador que puede rematar que de un pase
+				// al jugador destino
+				comandos.add(new CommandHitBall(i, jugadores[jugadorDestino],
+						1, r.nextInt(45)));
 			}
 		}
-
 		// Retorna la lista de comandos
 		return comandos;
-	}
-
-	public int[] getRecoveryBall(Trayectoria tra, GameSituations sp) {
-		int it = 0;
-		boolean found = false;
-		Position pJug;
-		double dist0, dist;
-		int idxFound = -1;
-		double[] posBalon;
-		int i = 0;
-		int[] ret;
-
-		ret = new int[2];
-		ret[0] = -1;
-		ret[1] = -1;
-		while ((!found) && (it < 100)) {
-			posBalon = tra.getPos(it);
-			if (!(new Position(posBalon[0], posBalon[1])).isInsideGameField(2)) {
-				return null;
-			}
-
-			if (posBalon[2] <= Constants.ALTO_ARCO) {
-				for (i = 0; i < sp.myPlayers().length; i++) {
-					if (posBalon[2] <= (sp.myPlayersDetail()[i].isGoalKeeper() ? Constants.ALTO_ARCO
-							: Constants.ALTURA_CONTROL_BALON)) {
-						pJug = sp.myPlayers()[i];
-						dist0 = (double) it
-								* Constants
-										.getVelocidad(sp.getMyPlayerSpeed(i));
-						dist = pJug.distance(new Position(posBalon[0],
-								posBalon[1]));
-						if ((dist0 >= dist) && (!sp.getOffSidePlayers()[i])) {
-							found = true;
-							idxFound = it;
-							ret[0] = it;
-							ret[1] = i;
-						}
-					}
-				}
-			}
-			it++;
-		}
-
-		return ret;
-	}
-
-	public int getRecoveryBallRival(Trayectoria tra, GameSituations sp) {
-		int it = 0;
-		boolean found = false;
-		Position pJug;
-		double dist0, dist;
-		int idxFound = -1;
-		double[] posBalon;
-		int i = 0;
-
-		while ((!found) && (it < 100)) {
-			posBalon = tra.getPos(it);
-			if (!(new Position(posBalon[0], posBalon[1])).isInsideGameField(2)) {
-				return -1;
-			}
-
-			if (posBalon[2] <= Constants.ALTO_ARCO) {
-				for (i = 0; i < sp.rivalPlayers().length; i++) {
-					if (posBalon[2] <= (sp.rivalPlayersDetail()[i]
-							.isGoalKeeper() ? Constants.ALTO_ARCO
-							: Constants.ALTURA_CONTROL_BALON)) {
-						pJug = sp.rivalPlayers()[i];
-						dist0 = (double) it
-								* Constants.getVelocidad(sp
-										.getRivalPlayerSpeed(i));
-						dist = pJug.distance(new Position(posBalon[0],
-								posBalon[1]));
-						if (dist0 >= dist) {
-							found = true;
-							idxFound = it;
-						}
-					}
-				}
-			}
-			it++;
-		}
-
-		return idxFound;
-	}
-
-	public LinkedList<Pases> isPassSafeFromOpponent(GameSituations sp,
-			int player) {
-		double angulo;
-		double fuerza;
-		double fuerzaTotal;
-		double anguloH;
-		double angulorad;
-		Position p1 = sp.myPlayers()[player];
-		LinkedList<Pases> pases;
-		Trayectoria tra;
-
-		pases = new LinkedList<Pases>();
-		for (angulo = 0; angulo <= Constants.ANGULO_VERTICAL_MAX; angulo += 10) {
-			angulorad = (angulo * Math.PI) / 180;
-			for (fuerza = 0.2f; fuerza <= 1; fuerza += 0.2f) {
-				fuerzaTotal = sp.getMyPlayerPower(player) * fuerza;
-				for (anguloH = 0.0f; anguloH < 360; anguloH += 10) {
-					tra = new Trayectoria(p1,
-							Constants.getVelocidadRemate(fuerzaTotal),
-							(anguloH * Math.PI) / 180, angulorad);
-					double distance2 = p1.distance(new Position(
-							tra.getPos(99)[0], tra.getPos(99)[1]));
-
-					int iteracionesrival = getRecoveryBallRival(tra, sp);
-					int[] iteraciones = getRecoveryBall(tra, sp);
-
-					if ((iteraciones != null) && (iteraciones[0] != -1)
-							&& (iteraciones[0] <= 99)) {
-
-						if ((iteraciones[0] < iteracionesrival)
-								|| ((iteracionesrival == -1) && (iteraciones[0] != -1))) {
-
-							pases.add(new Pases(new Position(tra
-									.getPos(iteraciones[0])[0], tra
-									.getPos(iteraciones[0])[1]), 0, angulo,
-									fuerza, iteraciones[0], player,
-									iteraciones[1]));
-						}
-					}
-				}
-			}
-		}
-
-		return pases;
 	}
 
 	@Override

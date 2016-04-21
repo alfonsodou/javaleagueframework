@@ -4,7 +4,11 @@
 	<classpathentry kind="src" path="recursos"/>
 	<classpathentry kind="src" path="tacticas"/>
 	<classpathentry kind="src" path="libs"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="javaleagueframework/libs/native"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/AbsoluteLayout.jar"/>
 	<classpathentry kind="lib" path="libs/jinput.jar">
 		<attributes>

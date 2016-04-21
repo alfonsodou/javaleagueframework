@@ -56,17 +56,22 @@ public class AgentPartido implements Agent {
 	}
 
 	@Override
-	public void testTactic(Object l, Object v, int num_iteraciones) throws Exception {
+	public String testTactic(Object l, Object v, int num_iteraciones) {
 		Partido partido;
 
-		partido = new Partido((Tactic) l, (Tactic) v, true);
-		int iter = 0;
-		for (int i = 0; partido.getEstado() != 7; i++) {
-			partido.iterar();
-			iter = partido.getIteracion();
-			if (i > num_iteraciones) {
-				break;
+		try {
+			partido = new Partido((Tactic) l, (Tactic) v, true);
+			int iter = 0;
+			for (int i = 0; partido.getEstado() != 7; i++) {
+				partido.iterar();
+				iter = partido.getIteracion();
+				if (i > num_iteraciones) {
+					break;
+				}
 			}
+			return "OK";
+		} catch (Exception e) {
+			return stackTraceToString(e);
 		}
 	}
 
