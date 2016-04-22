@@ -20,8 +20,7 @@ import org.javahispano.javaleague.javacup.shared.MatchShared;
 public class AgentPartido implements Agent {
 
 	@Override
-	public MatchShared execute(Object l, Object v, long maxTimeIter)
-			throws Exception {
+	public MatchShared execute(Object l, Object v, long maxTimeIter) throws Exception {
 		Partido partido;
 		MatchShared matchShared = new MatchShared();
 
@@ -35,9 +34,8 @@ public class AgentPartido implements Agent {
 			}
 		}
 
-		matchShared.setMatch(Compressor.compress(
-				Serializer.serialize(partido.getPartidoGuardado()),
-				partido.toString()));
+		matchShared
+				.setMatch(Compressor.compress(Serializer.serialize(partido.getPartidoGuardado()), partido.toString()));
 		matchShared.setMatchBin(partido.getPartidoGuardado().binaryServe());
 		matchShared.setGoalsLocal(partido.getGolesLocal());
 		matchShared.setGoalsVisiting(partido.getGolesVisita());
@@ -56,22 +54,17 @@ public class AgentPartido implements Agent {
 	}
 
 	@Override
-	public String testTactic(Object l, Object v, int num_iteraciones) {
+	public void testTactic(Object l, Object v, int num_iteraciones) throws Exception {
 		Partido partido;
 
-		try {
-			partido = new Partido((Tactic) l, (Tactic) v, true);
-			int iter = 0;
-			for (int i = 0; partido.getEstado() != 7; i++) {
-				partido.iterar();
-				iter = partido.getIteracion();
-				if (i > num_iteraciones) {
-					break;
-				}
+		partido = new Partido((Tactic) l, (Tactic) v, true);
+		int iter = 0;
+		for (int i = 0; partido.getEstado() != 7; i++) {
+			partido.iterar();
+			iter = partido.getIteracion();
+			if (i > num_iteraciones) {
+				break;
 			}
-			return "OK";
-		} catch (Exception e) {
-			return stackTraceToString(e);
 		}
 	}
 
