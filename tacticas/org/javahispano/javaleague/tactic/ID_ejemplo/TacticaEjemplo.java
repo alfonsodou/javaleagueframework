@@ -1,4 +1,4 @@
-package org.javahispano.javaleague.tactic.ID_4630111848497152;
+package org.javahispano.javaleague.tactic.ID_ejemplo;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.javahispano.javacup.model.engine.GameSituations;
 import org.javahispano.javacup.model.util.Constants;
 import org.javahispano.javacup.model.util.Position;
 
-public class Pringaos implements Tactic {
+public class TacticaEjemplo implements Tactic {
 	Position alineacion1[] = new Position[] {
 			new Position(0.2595419847328244, -50.41044776119403),
 			new Position(-19.46564885496183, -31.6044776119403),
@@ -94,31 +94,22 @@ public class Pringaos implements Tactic {
 
 	public LinkedList<Command> comandos = new LinkedList<Command>();
 
-	public Pringaos() {
+	public TacticaEjemplo() {
 
 	}
 
-	public TacticDetail detalle = new PringaosDetalle();
+	public TacticDetail detalle = new TacticaEjemploDetalle();
 
 	@Override
 	public TacticDetail getDetail() {
 		return detalle;
 	}
 
-	MiPosicion balonAnterior = new MiPosicion(new Position());
-	MiPosicion balonActual = new MiPosicion(new Position());
-
 	@Override
 	public List<Command> execute(GameSituations sp) {
 		// Limpia la lista de comandos
 		comandos.clear();
 		
-/*
-		double p = 0;
-		for(int i = 0; i < 10000000; i++) {
-			p += i * i;
-		}
-*/	
 		// Obtiene las posiciones de tus jugadores
 		Position[] jugadores = sp.myPlayers();
 		for (int i = 0; i < jugadores.length; i++) {
